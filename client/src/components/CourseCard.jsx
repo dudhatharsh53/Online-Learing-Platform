@@ -60,10 +60,17 @@ export default function CourseCard({ course }) {
                     {course.title}
                 </h3>
 
-                {/* Instructor */}
-                <p className="text-[#667781] text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <span className="w-1 h-1 bg-emerald-400 rounded-full" /> {course.instructor}
-                </p>
+                {/* Instructor & Faculty */}
+                <div className="flex flex-col gap-1 mb-4">
+                    <p className="text-[#667781] text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                        <span className="w-1 h-1 bg-emerald-400 rounded-full" /> {course.instructor}
+                    </p>
+                    {course.faculty && (
+                        <p className="text-[#00a884] text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ml-3">
+                            Faculty: {course.faculty.name}
+                        </p>
+                    )}
+                </div>
 
                 {/* Description */}
                 <p className="text-[#667781] text-sm leading-relaxed line-clamp-2 mb-6 font-medium">

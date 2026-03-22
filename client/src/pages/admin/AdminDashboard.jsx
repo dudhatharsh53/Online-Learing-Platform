@@ -70,7 +70,6 @@ export default function AdminDashboard() {
                 {[
                     { label: 'Platform Users', value: stats?.totalUsers, icon: <FiUsers />, color: 'bg-emerald-100 text-[#00a884]', shadow: 'shadow-emerald-500/10' },
                     { label: 'Active Courses', value: stats?.totalCourses, icon: <FiBookOpen />, color: 'bg-blue-100 text-blue-600', shadow: 'shadow-blue-500/10' },
-                    { label: 'Average Learning', value: `${stats?.avgProgress || 0}%`, icon: <FiActivity />, color: 'bg-amber-100 text-amber-600', shadow: 'shadow-amber-500/10' },
                     { label: 'Total Revenue', value: `₹${stats?.totalPayments || 0}`, icon: <FiCreditCard />, color: 'bg-purple-100 text-purple-600', shadow: 'shadow-purple-500/10' },
                 ].map((s, idx) => (
                     <div key={idx} className={`bg-white rounded-[2.5rem] p-10 border border-slate-50 ${s.shadow} shadow-2xl hover:scale-105 transition-all group relative overflow-hidden`}>
@@ -164,11 +163,7 @@ export default function AdminDashboard() {
                         ))}
                     </div>
 
-                    <div className="mt-10 text-center">
-                        <Link to="/admin/analytics" className="text-[#00a884] font-black text-xs uppercase tracking-widest border-b-2 border-transparent hover:border-[#00a884] pb-1 transition-all inline-flex items-center gap-2">
-                            View Comprehensive Analytics <FiArrowRight />
-                        </Link>
-                    </div>
+                    {/* Analytics link removed */}
                 </div>
             </div>
 

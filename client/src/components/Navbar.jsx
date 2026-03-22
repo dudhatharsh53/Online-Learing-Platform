@@ -36,14 +36,14 @@ export default function Navbar() {
                         <FiHome className="group-hover:scale-110 transition-transform" /> HOME
                     </Link>
 
-                    <Link to="/courses" className="text-[#667781] hover:text-[#00a884] text-xs font-black uppercase tracking-widest transition-all">
-                        Courses
+                    <Link to="/courses" className="text-[#667781] hover:text-[#00a884] text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 group">
+                        <FiBook className="group-hover:scale-110 transition-transform" /> Courses
                     </Link>
 
                     {/* Dashboard link merged with Home */}
 
                     {isAuthenticated && user?.role === 'admin' && (
-                        <Link to="/admin" className="bg-[#00a884] text-white px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 hover:bg-[#008f6f] transition-all shadow-xl shadow-emerald-500/20">
+                        <Link to="/admin" className="text-[#667781] hover:text-[#00a884] text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2 group">
                             <FiSettings size={12} /> Console
                         </Link>
                     )}

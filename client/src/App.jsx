@@ -23,7 +23,7 @@ import VideoLecture from './pages/VideoLecture'
 // Admin pages
 import AdminLayout from './components/admin/AdminLayout'
 import AdminDashboard from './pages/admin/AdminDashboard'
-import Analytics from './pages/admin/Analytics'
+// import Analytics from './pages/admin/Analytics'
 import StudentList from './pages/admin/StudentList'
 import StudentDetails from './pages/admin/StudentDetails'
 import ManageCourses from './pages/admin/ManageCourses'
@@ -72,7 +72,7 @@ function App() {
                             <Route path="/admin/faculty" element={<ManageFaculty />} />
                             <Route path="/admin/students" element={<StudentList />} />
                             <Route path="/admin/student/:id" element={<StudentDetails />} />
-                            <Route path="/admin/analytics" element={<Analytics />} />
+                            {/* <Route path="/admin/analytics" element={<Analytics />} /> */}
                             <Route path="/admin/payments" element={<Payments />} />
                         </Route>
                     </Route>
