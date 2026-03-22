@@ -83,6 +83,9 @@ export default function CourseDetail() {
                         if (verifyRes.data.success) {
                             toast.success('Payment Successful! Welcome to the course.')
                             dispatch(fetchCourseById(id))
+                            // Import and dispatch user refresh to update global state
+                            const { fetchCurrentUser } = await import('../redux/authSlice')
+                            dispatch(fetchCurrentUser())
                         }
                     } catch (error) {
                         toast.error('Payment verification failed')

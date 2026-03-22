@@ -31,13 +31,25 @@ const getStats = async (req, res) => {
         const payments = await Payment.find();
         const totalPayments = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
 
+        // Today's Earning
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+        const endOfToday = new Date();
+        endOfToday.setHours(23, 59, 59, 999);
+
+        const todayPayments = await Payment.find({
+            createdAt: { $gte: startOfToday, $lte: endOfToday }
+        });
+        const todayRevenue = todayPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+
         res.status(200).json({
             success: true,
             stats: {
                 totalUsers,
                 totalCourses,
                 avgProgress: Number(averageCompletionPercentage),
-                totalPayments
+                totalPayments,
+                todayRevenue
             },
         });
     } catch (error) {

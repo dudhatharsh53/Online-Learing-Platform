@@ -1,6 +1,7 @@
 const Progress = require('../models/Progress');
 const Course = require('../models/Course');
 const Lecture = require('../models/Lecture');
+const User = require('../models/User');
 
 // ─── @route  POST /api/progress/mark ────────────────────────────────────────
 // @desc   Mark a lecture as completed and update progress %
@@ -147,15 +148,35 @@ const getCourseProgressAdmin = async (req, res) => {
 // @access Private/Student
 const getMyProgress = async (req, res) => {
     try {
-        const progressList = await Progress.find({ userId: req.user._id })
-            .populate('courseId', 'title thumbnail instructor category')
-            .populate('lastWatched', 'title');
+        const userId = req.user._id;
+        
+        // Use User model as source of truth for enrollment
+        const user = await User.findById(userId).populate({
+            path: 'enrolledCourses',
+            populate: { path: 'lectures' }
+        });
 
-        // Remap fields slightly if client expects old naming
-        const results = progressList.map(p => ({
-            ...p.toObject(),
-            course: p.courseId, // Backwards compat for student dashboard
-            progressPercent: p.progressPercent
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const results = await Promise.all(user.enrolledCourses.map(async (course) => {
+            let p = await Progress.findOne({ userId, courseId: course._id })
+                .populate('lastWatched', 'title');
+
+            if (!p) {
+                // Auto-create progress if missing but user is enrolled
+                p = await Progress.create({
+                    userId,
+                    courseId: course._id,
+                    completedVideos: [],
+                    progressPercent: 0
+                });
+            }
+
+            return {
+                ...p.toObject(),
+                course: course, // for student dashboard
+                progressPercent: p.progressPercent
+            };
         }));
 
         res.status(200).json({ success: true, progressList: results });

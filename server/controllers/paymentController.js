@@ -30,13 +30,9 @@ const createOrder = asyncHandler(async (req, res) => {
         receipt: `receipt_${courseId}_${req.user._id}`.substring(0, 40),
     };
 
-    // Demo Bypass: If keys are missing, just return success so frontend can do mock enrollment
     if (!razorpay) {
-        return res.status(200).json({
-            success: true,
-            isMock: true,
-            course: { title: course.title, price: course.price }
-        });
+        res.status(500);
+        throw new Error('Razorpay is not configured. Please check server .env');
     }
 
     try {
@@ -63,10 +59,6 @@ const createOrder = asyncHandler(async (req, res) => {
 const verifyPayment = asyncHandler(async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, courseId, isMock } = req.body;
 
-    // College Project Bypass: If keys are missing and it's a mock request, verify automatically
-    if (!process.env.RAZORPAY_KEY_ID && isMock) {
-        return await enrollStudent(courseId, req.user._id, res, 'mock_payment_id', 'mock_order_id', 0);
-    }
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSignature = crypto
@@ -113,14 +105,19 @@ async function enrollStudent(courseId, userId, res, paymentId, orderId, amount) 
         });
     }
 
-    const progressExists = await Progress.findOne({ student: userId, course: course._id });
-    if (!progressExists) {
-        await Progress.create({
-            student: userId,
-            course: course._id,
-            completedLectures: [],
-            progressPercent: 0,
-        });
+    try {
+        const progressExists = await Progress.findOne({ userId, courseId: course._id });
+        if (!progressExists) {
+            await Progress.create({
+                userId,
+                courseId: course._id,
+                completedVideos: [],
+                progressPercent: 0,
+            });
+        }
+    } catch (err) {
+        console.error('Progress creation error (likely duplicate):', err.message);
+        // Continue even if progress record fails (e.g. indexing race condition)
     }
 
     return res.status(200).json({

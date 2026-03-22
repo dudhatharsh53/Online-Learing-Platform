@@ -136,24 +136,6 @@ export default function Home() {
                             </div>
                         </div>
 
-                        {/* Stats Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-20">
-                            {[
-                                { icon: <FiBook />, label: 'Enrolled Courses', value: progressList.length, color: 'bg-blue-50 text-blue-600' },
-                                { icon: <FiTrendingUp />, label: 'In Progress', value: inProgressCount, color: 'bg-amber-50 text-amber-600' },
-                                { icon: <FiAward />, label: 'Completed', value: completedCount, color: 'bg-emerald-50 text-emerald-600' },
-                                { icon: <FiActivity />, label: 'Total Mastery', value: `${averageProgress}%`, color: 'bg-purple-50 text-purple-600' },
-                            ].map((stat, i) => (
-                                <div key={i} className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-2xl shadow-slate-200/50 hover:shadow-emerald-500/10 transition-all hover:scale-105">
-                                    <div className={`w-14 h-14 rounded-2xl ${stat.color} flex items-center justify-center text-2xl mb-6 shadow-sm`}>
-                                        {stat.icon}
-                                    </div>
-                                    <h3 className="text-4xl font-black text-[#111b21] mb-2">{stat.value}</h3>
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{stat.label}</p>
-                                </div>
-                            ))}
-                        </div>
-
                         {/* Main Content Areas */}
                         <div className="flex flex-col lg:flex-row gap-12">
                             {/* Courses List */}
@@ -184,42 +166,50 @@ export default function Home() {
                                         </Link>
                                     </div>
                                 ) : (
-                                    <div className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         {progressList.map((prog) => (
-                                            <div key={prog.course?._id} className="bg-white rounded-[2.5rem] p-8 flex flex-col sm:flex-row items-center gap-8 border border-slate-50 shadow-lg shadow-slate-100 hover:shadow-2xl hover:shadow-emerald-500/5 transition-all group">
-                                                <div className="w-full sm:w-32 h-20 rounded-2xl bg-neutral-100 overflow-hidden relative shadow-inner">
+                                            <div key={prog.course?._id} className="bg-white rounded-[2.5rem] p-8 flex flex-col gap-6 border border-slate-50 shadow-lg shadow-slate-100 hover:shadow-2xl hover:shadow-emerald-500/5 transition-all group relative overflow-hidden">
+                                                <div className="aspect-video w-full rounded-2xl bg-neutral-100 overflow-hidden relative shadow-inner">
                                                     {prog.course?.thumbnail ? (
                                                         <img src={prog.course.thumbnail} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                                     ) : (
                                                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-400 to-[#00a884]">
-                                                            <FiPlay className="text-white text-2xl" />
+                                                            <FiPlay className="text-white text-3xl" />
                                                         </div>
                                                     )}
-                                                </div>
-
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex justify-between items-start gap-4 mb-2">
-                                                        <div>
-                                                            <p className="text-[10px] font-black text-[#00a884] uppercase tracking-widest mb-1">{prog.course?.category || 'Professional Course'}</p>
-                                                            <h3 className="text-xl font-black text-[#111b21] truncate">{prog.course?.title}</h3>
-                                                        </div>
-                                                        <div className={`px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider ${prog.progressPercent === 100 ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'}`}>
-                                                            {prog.progressPercent === 100 ? 'Mastered' : `${prog.progressPercent}% Done`}
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-6 mb-2 shadow-inner">
-                                                        <div className={`h-full transition-all duration-1000 ${prog.progressPercent === 100 ? 'bg-emerald-500' : 'bg-[#00a884]'}`} style={{ width: `${prog.progressPercent}%` || 0 }} />
+                                                    <div className="absolute top-4 left-4">
+                                                        <span className="bg-white/90 backdrop-blur-md text-[#00a884] px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm">
+                                                            {prog.course?.category || 'Professional'}
+                                                        </span>
                                                     </div>
                                                 </div>
 
-                                                <div className="flex-shrink-0">
-                                                    <Link
-                                                        to={prog.lastWatched ? `/courses/${prog.course?._id}/lecture/${prog.lastWatched._id || prog.lastWatched}` : `/courses/${prog.course?._id}`}
-                                                        className={`p-4 rounded-2xl flex items-center gap-3 font-bold transition-all shadow-xl ${prog.progressPercent === 100 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100' : 'bg-[#111b21] text-white hover:bg-[#202c33] shadow-slate-900/10'}`}
-                                                    >
-                                                        {prog.progressPercent === 100 ? 'Review Lectures' : 'Resume Lesson'} <FiPlay size={16} />
-                                                    </Link>
+                                                <div className="flex-1 flex flex-col">
+                                                    <div className="flex justify-between items-start gap-4 mb-3">
+                                                        <h3 className="text-xl font-black text-[#111b21] line-clamp-1">{prog.course?.title}</h3>
+                                                        <div className={`px-3 py-1 rounded-xl text-[9px] font-black uppercase tracking-wider flex-shrink-0 ${prog.progressPercent === 100 ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'}`}>
+                                                            {prog.completedVideos?.length || 0} / {prog.course?.lectures?.length || 0} Videos
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <p className="text-[11px] text-[#667781] font-bold">Instructor: {prog.course?.instructor || 'Internal Team'}</p>
+                                                    
+                                                    <p className="text-xs text-[#8696a0] line-clamp-1 mt-4 mb-6 font-medium italic">
+                                                        {prog.lastWatched ? `Last lesson: ${prog.lastWatched.title}` : 'Start learning today!'}
+                                                    </p>
+
+                                                    <div className="mt-auto">
+                                                        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-6 shadow-inner">
+                                                            <div className={`h-full transition-all duration-1000 ${prog.progressPercent === 100 ? 'bg-emerald-500' : 'bg-[#00a884]'}`} style={{ width: `${prog.progressPercent}%` || 0 }} />
+                                                        </div>
+
+                                                        <Link
+                                                            to={prog.lastWatched ? `/courses/${prog.course?._id}/lecture/${prog.lastWatched._id || prog.lastWatched}` : `/courses/${prog.course?._id}`}
+                                                            className={`w-full py-4 rounded-2xl flex items-center justify-center gap-3 font-bold transition-all shadow-xl ${prog.progressPercent === 100 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100' : 'bg-[#111b21] text-white hover:bg-[#202c33]'}`}
+                                                        >
+                                                            {prog.progressPercent === 100 ? 'Review Lectures' : 'Continue Learning'} <FiPlay size={16} />
+                                                        </Link>
+                                                    </div>
                                                 </div>
                                             </div>
                                         ))}
@@ -229,28 +219,29 @@ export default function Home() {
 
                             {/* Quick Profile / Sidebar Info */}
                             <div className="w-full lg:w-80 space-y-8">
-                                <div className="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-xl shadow-slate-100 text-center">
-                                    <h3 className="font-black text-[#111b21] mb-2">{user?.name}</h3>
-                                    <p className="text-xs text-[#8696a0] font-bold uppercase tracking-widest mb-8">{user?.email}</p>
-
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="bg-[#f8faf9] p-4 rounded-2xl">
-                                            <p className="text-xl font-black text-[#111b21]">{progressList.length}</p>
-                                            <p className="text-[10px] text-[#8696a0] font-bold uppercase">Enrolled</p>
-                                        </div>
-                                        <div className="bg-[#f8faf9] p-4 rounded-2xl">
-                                            <p className="text-xl font-black text-[#111b21]">{completedCount}</p>
-                                            <p className="text-[10px] text-[#8696a0] font-bold uppercase">Finished</p>
-                                        </div>
+                                {/* Enrolled Courses Card moved here */}
+                                <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-2xl shadow-slate-200/50 hover:shadow-emerald-500/10 transition-all hover:scale-105">
+                                    <div className={`w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl mb-6 shadow-sm`}>
+                                        <FiBook />
                                     </div>
+                                    <h3 className="text-4xl font-black text-[#111b21] mb-2">{progressList.length}</h3>
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Enrolled Courses</p>
                                 </div>
 
-                                <div className="bg-[#00A884] rounded-[2.5rem] p-10 text-white relative overflow-hidden">
+                                <div className="bg-[#00A884] rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-2xl shadow-emerald-500/20">
                                     <div className="absolute top-0 right-0 w-20 h-20 bg-white/20 rounded-bl-full shadow-white/20 shadow-2xl" />
                                     <h3 className="text-xl font-black mb-4 relative z-10">Helpline Center</h3>
                                     <p className="text-sm text-emerald-50 leading-relaxed mb-6 font-medium">Need help with your course? Reach out to our technical team.</p>
-                                    <p className="text-white font-black mb-1">+91 6353141028</p>
-                                    <p className="text-xs font-bold text-white/80">learnhub@gmail.com</p>
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center"><FiActivity size={14} /></div>
+                                            <p className="text-white font-black text-sm">+91 6353141028</p>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center"><FiShield size={14} /></div>
+                                            <p className="text-xs font-bold text-white/80">learnhub@gmail.com</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
