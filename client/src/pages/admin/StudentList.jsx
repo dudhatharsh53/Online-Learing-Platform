@@ -228,12 +228,7 @@ const StudentList = () => {
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <button
-                                                            onClick={() => navigate(`/admin/student/${s._id}`)}
-                                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition-colors" title="View Progress"
-                                                        >
-                                                            <FiEye size={18} />
-                                                        </button>
+                                                        {/* View Progress Button Removed */}
                                                         <button
                                                             onClick={() => handleEditClick(s)}
                                                             className="p-2 text-amber-600 hover:bg-amber-50 rounded-full transition-colors" title="Edit Profile"

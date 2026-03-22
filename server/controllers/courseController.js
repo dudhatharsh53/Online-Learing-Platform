@@ -15,6 +15,19 @@ const getAllCourses = async (req, res) => {
         if (category && category !== 'All') filter.category = category;
         if (level && level !== 'All') filter.level = level;
         if (search) filter.title = { $regex: search, $options: 'i' };
+        if (req.query.faculty && req.query.faculty !== 'All') {
+            // Find faculty by name or ID
+            const mongoose = require('mongoose');
+            if (mongoose.Types.ObjectId.isValid(req.query.faculty)) {
+                filter.faculty = req.query.faculty;
+            } else {
+                // If it's a name, we might need a separate lookup or just skip if name isn't unique/known here
+                // For now, let's assume the frontend might send ID or we can find by name in faculty collection first
+                const Faculty = require('../models/Faculty');
+                const fac = await Faculty.findOne({ name: req.query.faculty });
+                if (fac) filter.faculty = fac._id;
+            }
+        }
 
         const courses = await Course.find(filter)
             .select('-enrolledStudents')

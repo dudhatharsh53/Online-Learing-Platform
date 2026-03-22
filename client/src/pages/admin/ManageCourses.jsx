@@ -83,8 +83,8 @@ export default function ManageCourses() {
         <div className="container-lg py-10 animate-fade-in">
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-100 mb-1">Manage Courses</h1>
-                    <p className="text-slate-500">{courses.length} total courses</p>
+                    <h1 className="text-2xl font-bold text-[#111b21] mb-1">Manage Courses</h1>
+                    <p className="text-[#667781]">{courses.length} total courses</p>
                 </div>
                 <button onClick={openCreate} className="btn-primary flex items-center gap-2 text-sm" id="create-course-btn">
                     <FiPlus /> New Course
@@ -105,7 +105,7 @@ export default function ManageCourses() {
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="border-b border-slate-800 text-slate-500 text-xs uppercase tracking-wider">
+                                <tr className="border-b border-slate-100 text-[#667781] text-xs uppercase tracking-wider">
                                     <th className="text-left p-4 font-medium">Course</th>
                                     <th className="text-left p-4 font-medium hidden md:table-cell">Category</th>
                                     <th className="text-left p-4 font-medium hidden sm:table-cell">Lectures</th>
@@ -113,39 +113,39 @@ export default function ManageCourses() {
                                     <th className="text-right p-4 font-medium">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-800">
+                            <tbody className="divide-y divide-slate-100">
                                 {courses.map((course) => (
-                                    <tr key={course._id} className="hover:bg-slate-900/50 transition-colors">
+                                    <tr key={course._id} className="hover:bg-slate-50 transition-colors">
                                         <td className="p-4">
                                             <div className="flex items-center gap-3">
                                                 {course.thumbnail
                                                     ? <img src={course.thumbnail} alt="" className="w-10 h-7 rounded-lg object-cover flex-shrink-0" />
-                                                    : <div className="w-10 h-7 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0"><FiBook className="text-slate-600 text-xs" /></div>
+                                                    : <div className="w-10 h-7 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0"><FiBook className="text-slate-400 text-xs" /></div>
                                                 }
                                                 <div>
-                                                    <p className="font-medium text-slate-200 line-clamp-1">{course.title}</p>
-                                                    <p className="text-xs text-slate-500">{course.instructor}</p>
+                                                    <p className="font-bold text-[#111b21] line-clamp-1">{course.title}</p>
+                                                    <p className="text-xs text-[#667781]">{course.instructor}</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="p-4 hidden md:table-cell"><span className="badge-blue badge">{course.category}</span></td>
-                                        <td className="p-4 hidden sm:table-cell text-slate-400">{course.lectures?.length || 0}</td>
-                                        <td className="p-4 hidden lg:table-cell text-slate-400">{course.enrolledStudents?.length || 0}</td>
+                                        <td className="p-4 hidden sm:table-cell text-[#667781]">{course.lectures?.length || 0}</td>
+                                        <td className="p-4 hidden lg:table-cell text-[#667781]">{course.enrolledStudents?.length || 0}</td>
                                         <td className="p-4">
                                             <div className="flex items-center justify-end gap-2">
                                                 <Link to={`/admin/courses/${course._id}/upload-lecture`}
-                                                    className="p-2 rounded-lg text-slate-500 hover:text-primary-400 hover:bg-primary-900/20 transition-colors" title="Upload lecture">
+                                                    className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 transition-colors" title="Upload lecture">
                                                     <FiUpload className="text-sm" />
                                                 </Link>
                                                 <button onClick={() => openEdit(course)}
-                                                    className="p-2 rounded-lg text-slate-500 hover:text-amber-400 hover:bg-amber-900/20 transition-colors" title="Edit">
+                                                    className="p-2 rounded-lg text-amber-600 hover:bg-amber-50 transition-colors" title="Edit">
                                                     <FiEdit2 className="text-sm" />
                                                 </button>
                                                 <button onClick={() => handleDelete(course._id, course.title)}
                                                     disabled={deleting === course._id}
-                                                    className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-900/20 transition-colors" title="Delete">
+                                                    className="p-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors" title="Delete">
                                                     {deleting === course._id
-                                                        ? <span className="w-4 h-4 border border-red-400 border-t-transparent rounded-full animate-spin inline-block" />
+                                                        ? <span className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin inline-block" />
                                                         : <FiTrash2 className="text-sm" />}
                                                 </button>
                                             </div>
@@ -162,9 +162,9 @@ export default function ManageCourses() {
             {modal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
                     <div className="card w-full max-w-lg max-h-[90vh] overflow-y-auto">
-                        <div className="flex items-center justify-between p-6 border-b border-slate-800">
-                            <h2 className="text-lg font-semibold text-slate-100">{modal === 'create' ? 'New Course' : 'Edit Course'}</h2>
-                            <button onClick={closeModal} className="text-slate-500 hover:text-slate-300"><FiX /></button>
+                        <div className="flex items-center justify-between p-6 border-b border-slate-100">
+                            <h2 className="text-lg font-semibold text-[#111b21]">{modal === 'create' ? 'New Course' : 'Edit Course'}</h2>
+                            <button onClick={closeModal} className="text-slate-400 hover:text-slate-600"><FiX /></button>
                         </div>
                         <form onSubmit={handleSubmit} className="p-6 space-y-4">
                             {/* Thumbnail */}

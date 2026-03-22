@@ -30,7 +30,6 @@ const AdminLayout = () => {
         { name: 'Courses', path: '/admin/courses', icon: <FiBookOpen /> },
         { name: 'Faculty', path: '/admin/faculty', icon: <FiUsers /> },
         { name: 'Students', path: '/admin/students', icon: <FiUsers /> },
-        { name: 'Analytics', path: '/admin/analytics', icon: <FiPieChart /> },
         { name: 'Payments', path: '/admin/payments', icon: <FiDollarSign /> },
     ];
 

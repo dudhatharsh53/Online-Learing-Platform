@@ -17,8 +17,8 @@ router.use(protect);
 router.use(authorizeAdmin);
 
 router.get('/stats', getStats);
-router.get('/student-progress', getStudentProgress);
-router.get('/student/:id/details', getStudentDetails);
+// router.get('/student-progress', getStudentProgress);
+// router.get('/student/:id/details', getStudentDetails);
 router.get('/recent-activity', getRecentActivity);
 router.get('/payments', getPayments);
 router.get('/students', getStudents);

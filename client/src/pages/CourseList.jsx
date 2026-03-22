@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAllCourses } from '../redux/courseSlice'
+import { fetchFaculties } from '../redux/facultySlice'
 import CourseCard from '../components/CourseCard'
 import { FiSearch, FiFilter, FiBook, FiX, FiChevronDown, FiMenu } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
@@ -20,10 +21,12 @@ const PRICE_RANGES = [
 export default function CourseList() {
     const dispatch = useDispatch()
     const { courses, loading } = useSelector((state) => state.courses)
+    const { faculties } = useSelector((state) => state.faculty)
     const { user, isAuthenticated } = useSelector((state) => state.auth)
 
     const [search, setSearch] = useState('')
     const [category, setCategory] = useState('All')
+    const [faculty, setFaculty] = useState('All')
     const [level, setLevel] = useState('All')
     const [purchaseStatus, setPurchaseStatus] = useState('All')
     const [priceRange, setPriceRange] = useState('All')
@@ -31,6 +34,7 @@ export default function CourseList() {
 
     useEffect(() => {
         dispatch(fetchAllCourses())
+        dispatch(fetchFaculties())
     }, [dispatch])
 
     // Client-side filtering as the backend doesn't support all these yet
@@ -38,6 +42,7 @@ export default function CourseList() {
     const filteredCourses = courses.filter(course => {
         const matchesSearch = !search || course.title.toLowerCase().includes(search.toLowerCase())
         const matchesCategory = category === 'All' || course.category === category
+        const matchesFaculty = faculty === 'All' || course.faculty?.name === faculty
         const matchesLevel = level === 'All' || course.level === level
 
         // Purchase status logic
@@ -56,7 +61,7 @@ export default function CourseList() {
         else if (priceRange === '500-1000') matchesPrice = course.price > 500 && course.price <= 1000
         else if (priceRange === '1000+') matchesPrice = course.price > 1000
 
-        return matchesSearch && matchesCategory && matchesLevel && matchesPurchase && matchesPrice
+        return matchesSearch && matchesCategory && matchesFaculty && matchesLevel && matchesPurchase && matchesPrice
     })
 
     const FilterDropdown = ({ label, options, value, onChange, icon }) => (
@@ -144,6 +149,12 @@ export default function CourseList() {
 
                                 {/* Dropdown Filters */}
                                 <FilterDropdown label="Category" options={CATEGORIES} value={category} onChange={setCategory} />
+                                <FilterDropdown 
+                                    label="Faculty" 
+                                    options={['All', ...faculties.map(f => f.name)]} 
+                                    value={faculty} 
+                                    onChange={setFaculty} 
+                                />
                                 <FilterDropdown label="Skill Level" options={LEVELS} value={level} onChange={setLevel} />
                                 {isAuthenticated && (
                                     <FilterDropdown label="Enrollment Status" options={PURCHASE_STATUS} value={purchaseStatus} onChange={setPurchaseStatus} />
@@ -152,7 +163,7 @@ export default function CourseList() {
 
                                 <div className="pt-10">
                                     <button
-                                        onClick={() => { setSearch(''); setCategory('All'); setLevel('All'); setPurchaseStatus('All'); setPriceRange('All'); }}
+                                        onClick={() => { setSearch(''); setCategory('All'); setFaculty('All'); setLevel('All'); setPurchaseStatus('All'); setPriceRange('All'); }}
                                         className="w-full py-4 text-[#ef4444] font-bold text-sm hover:bg-red-50 rounded-2xl transition-colors"
                                     >
                                         Reset All Filters
@@ -189,7 +200,7 @@ export default function CourseList() {
                             Your current filter combination didn't yield any results. Try adjusting the category or search keywords to find what you're looking for.
                         </p>
                         <button
-                            onClick={() => { setSearch(''); setCategory('All'); setLevel('All'); setPurchaseStatus('All'); setPriceRange('All'); }}
+                            onClick={() => { setSearch(''); setCategory('All'); setFaculty('All'); setLevel('All'); setPurchaseStatus('All'); setPriceRange('All'); }}
                             className="bg-[#00a884] text-white px-10 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-500/20 hover:scale-105 transition-all"
                         >
                             Reset My Quest

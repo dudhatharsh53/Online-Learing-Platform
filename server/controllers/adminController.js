@@ -12,7 +12,8 @@ const getStats = async (req, res) => {
         const totalUsers = await User.countDocuments({ role: 'student' });
         const totalCourses = await Course.countDocuments();
 
-        // Calculate average completion percentage across all student progress records
+        // Progress calculation removed
+        /*
         const progressRecords = await Progress.find();
 
         let totalCompletion = 0;
@@ -23,6 +24,8 @@ const getStats = async (req, res) => {
         const averageCompletionPercentage = progressRecords.length > 0
             ? (totalCompletion / progressRecords.length).toFixed(2)
             : 0;
+        */
+        const averageCompletionPercentage = 0;
 
         // Sum total payments
         const payments = await Payment.find();
