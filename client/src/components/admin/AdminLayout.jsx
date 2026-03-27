@@ -111,7 +111,6 @@ const AdminLayout = () => {
                     <div className="flex items-center gap-6">
                         <div className="flex flex-col items-end">
                             <span className="text-[10px] font-black text-[#667781] uppercase tracking-[0.2em]">{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
-                            <span className="text-xs font-bold text-[#00a884]">System: Optimized</span>
                         </div>
                     </div>
                 </header>
